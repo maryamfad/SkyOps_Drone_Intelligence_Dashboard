@@ -7,20 +7,26 @@ import {
 	MapPin,
 	Plane,
 } from "lucide-react";
-import {
-	Bar,
-	BarChart,
-	CartesianGrid,
-	ResponsiveContainer,
-	Tooltip,
-	XAxis,
-	YAxis,
-} from "recharts";
+// import {
+// 	Bar,
+// 	BarChart,
+// 	CartesianGrid,
+// 	ResponsiveContainer,
+// 	Tooltip,
+// 	XAxis,
+// 	YAxis,
+// } from "recharts";
 import Sidebar from "../components/layout/Sidebar";
 import StatCard from "../components/common/StatCard";
 import AlertSeverity from "../components/AlertSeverity";
+import MissionActivity from "../components/MissionActivity";
 
-const missionActivityData = [
+type MissionActivityData = {
+	day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+	completed: number;
+	active: number;
+};
+const missionActivityData: MissionActivityData[] = [
 	{ day: "Mon", completed: 6, active: 2 },
 	{ day: "Tue", completed: 8, active: 3 },
 	{ day: "Wed", completed: 5, active: 1 },
@@ -29,6 +35,7 @@ const missionActivityData = [
 	{ day: "Sat", completed: 4, active: 2 },
 	{ day: "Sun", completed: 9, active: 4 },
 ];
+
 type AlertSeverityName = "Critical" | "High" | "Medium" | "Low";
 
 type AlertSeverityData = {
@@ -245,112 +252,10 @@ export default function DashboardPage() {
 				</section>
 
 				<section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.6fr_1fr]">
-					<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-						<div className="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-start">
-							<div>
-								<h3 className="text-xl font-bold text-slate-950">
-									Mission Activity
-								</h3>
-								<p className="mt-1 text-sm text-slate-500">
-									Completed and active missions by day
-								</p>
-							</div>
-
-							<div className="flex gap-4 text-sm text-slate-500">
-								<span className="inline-flex items-center gap-2">
-									<span className="h-2.5 w-2.5 rounded-full bg-teal-500" />
-									Completed
-								</span>
-								<span className="inline-flex items-center gap-2">
-									<span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
-									Active
-								</span>
-							</div>
-						</div>
-
-						<div className="h-64">
-							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={missionActivityData}>
-									<CartesianGrid
-										strokeDasharray="3 3"
-										vertical={false}
-									/>
-									<XAxis dataKey="day" />
-									<YAxis />
-									<Tooltip />
-									<Bar
-										dataKey="completed"
-										fill="#14b8a6"
-										radius={[8, 8, 0, 0]}
-									/>
-									<Bar
-										dataKey="active"
-										fill="#3b82f6"
-										radius={[8, 8, 0, 0]}
-									/>
-								</BarChart>
-							</ResponsiveContainer>
-						</div>
-					</div>
+					<MissionActivity
+						missionActivityData={missionActivityData}
+					/>
 					<AlertSeverity alertSeverityData={alertSeverityData} />
-					{/* <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-						<div className="mb-5">
-							<h3 className="text-xl font-bold text-slate-950">
-								Alert Severity
-							</h3>
-							<p className="mt-1 text-sm text-slate-500">
-								Current open alerts by priority
-							</p>
-						</div>
-
-						<div className="relative h-56">
-							<ResponsiveContainer width="100%" height="100%">
-								<PieChart>
-									<Pie
-										data={alertSeverityData}
-										dataKey="value"
-										nameKey="name"
-										innerRadius={62}
-										outerRadius={86}
-										paddingAngle={4}
-									>
-										{alertSeverityData.map((entry) => (
-											<Cell
-												key={entry.name}
-												fill={entry.color}
-											/>
-										))}
-									</Pie>
-									<Tooltip />
-								</PieChart>
-							</ResponsiveContainer>
-
-							<div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-								<h3 className="text-4xl font-bold tracking-tight">
-									11
-								</h3>
-								<p className="mt-1 text-sm text-slate-500">
-									Open alerts
-								</p>
-							</div>
-						</div>
-
-						<div className="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-600">
-							{alertSeverityData.map((item) => (
-								<div
-									key={item.name}
-									className="flex items-center gap-2"
-								>
-									<span
-										className={`h-2.5 w-2.5 rounded-full ${item.dotClass}`}
-									/>
-									<span>
-										{item.name} {item.value}
-									</span>
-								</div>
-							))}
-						</div>
-					</div> */}
 				</section>
 
 				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
