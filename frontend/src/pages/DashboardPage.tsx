@@ -11,9 +11,6 @@ import {
 	Bar,
 	BarChart,
 	CartesianGrid,
-	Cell,
-	Pie,
-	PieChart,
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
@@ -21,6 +18,7 @@ import {
 } from "recharts";
 import Sidebar from "../components/layout/Sidebar";
 import StatCard from "../components/common/StatCard";
+import AlertSeverity from "../components/AlertSeverity";
 
 const missionActivityData = [
 	{ day: "Mon", completed: 6, active: 2 },
@@ -31,8 +29,15 @@ const missionActivityData = [
 	{ day: "Sat", completed: 4, active: 2 },
 	{ day: "Sun", completed: 9, active: 4 },
 ];
+type AlertSeverityName = "Critical" | "High" | "Medium" | "Low";
 
-const alertSeverityData = [
+type AlertSeverityData = {
+	name: AlertSeverityName;
+	value: number;
+	color: string;
+	dotClass: string;
+};
+const alertSeverityData: AlertSeverityData[] = [
 	{
 		name: "Critical",
 		value: 3,
@@ -287,8 +292,8 @@ export default function DashboardPage() {
 							</ResponsiveContainer>
 						</div>
 					</div>
-
-					<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
+					<AlertSeverity alertSeverityData={alertSeverityData} />
+					{/* <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
 						<div className="mb-5">
 							<h3 className="text-xl font-bold text-slate-950">
 								Alert Severity
@@ -345,7 +350,7 @@ export default function DashboardPage() {
 								</div>
 							))}
 						</div>
-					</div>
+					</div> */}
 				</section>
 
 				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">

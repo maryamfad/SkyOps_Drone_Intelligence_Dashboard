@@ -14,9 +14,9 @@ import {
 	ShieldAlert,
 	Siren,
 } from "lucide-react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import Sidebar from "../components/layout/Sidebar";
 import StatCard from "../components/common/StatCard";
+import AlertSeverity from "../components/AlertSeverity";
 
 type AlertSeverity = "Critical" | "High" | "Medium" | "Low";
 type AlertStatus = "New" | "Acknowledged" | "Resolved";
@@ -41,10 +41,13 @@ type AlertItem = {
 	message: string;
 };
 
-type SeverityData = {
-	name: AlertSeverity;
+type AlertSeverityName = "Critical" | "High" | "Medium" | "Low";
+
+type AlertSeverityData = {
+	name: AlertSeverityName;
 	value: number;
 	color: string;
+	dotClass: string;
 };
 
 type ResponseQueueItem = {
@@ -141,13 +144,32 @@ const alerts: AlertItem[] = [
 	},
 ];
 
-const severityData: SeverityData[] = [
-	{ name: "Critical", value: 3, color: "#ef4444" },
-	{ name: "High", value: 4, color: "#f59e0b" },
-	{ name: "Medium", value: 2, color: "#3b82f6" },
-	{ name: "Low", value: 2, color: "#14b8a6" },
+const alertSeverityData: AlertSeverityData[] = [
+	{
+		name: "Critical",
+		value: 3,
+		color: "#ef4444",
+		dotClass: "bg-red-500",
+	},
+	{
+		name: "High",
+		value: 4,
+		color: "#f59e0b",
+		dotClass: "bg-amber-500",
+	},
+	{
+		name: "Medium",
+		value: 2,
+		color: "#3b82f6",
+		dotClass: "bg-blue-500",
+	},
+	{
+		name: "Low",
+		value: 2,
+		color: "#14b8a6",
+		dotClass: "bg-teal-500",
+	},
 ];
-
 const responseQueue: ResponseQueueItem[] = [
 	{
 		drone: "SkyScout-01",
@@ -569,159 +591,7 @@ export default function AlertsPage() {
 							)}
 						</div>
 					</div>
-
-					<div className="space-y-6">
-						<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-							<div className="mb-5">
-								<h3 className="text-xl font-bold text-slate-950">
-									Severity Mix
-								</h3>
-								<p className="mt-1 text-sm text-slate-500">
-									Open alerts by priority
-								</p>
-							</div>
-
-							<div className="relative h-56">
-								<ResponsiveContainer width="100%" height="100%">
-									<PieChart>
-										<Pie
-											data={severityData}
-											dataKey="value"
-											nameKey="name"
-											innerRadius={62}
-											outerRadius={86}
-											paddingAngle={4}
-										>
-											{severityData.map((entry) => (
-												<Cell
-													key={entry.name}
-													fill={entry.color}
-												/>
-											))}
-										</Pie>
-										<Tooltip />
-									</PieChart>
-								</ResponsiveContainer>
-
-								<div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-									<h3 className="text-4xl font-bold tracking-tight">
-										11
-									</h3>
-									<p className="mt-1 text-sm text-slate-500">
-										open alerts
-									</p>
-								</div>
-							</div>
-
-							<div className="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-600">
-								{severityData.map((item) => (
-									<div
-										key={item.name}
-										className="flex items-center gap-2"
-									>
-										<span
-											className="h-2.5 w-2.5 rounded-full"
-											style={{
-												backgroundColor: item.color,
-											}}
-										/>
-										<span>
-											{item.name} {item.value}
-										</span>
-									</div>
-								))}
-							</div>
-						</div>
-
-						<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-							<div className="mb-5">
-								<h3 className="text-xl font-bold text-slate-950">
-									Response Queue
-								</h3>
-								<p className="mt-1 text-sm text-slate-500">
-									Recommended next actions
-								</p>
-							</div>
-
-							<div className="flex flex-col gap-3">
-								{responseQueue.map((item) => (
-									<div
-										key={item.drone}
-										className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4"
-									>
-										<div>
-											<p className="font-semibold text-slate-950">
-												{item.drone}
-											</p>
-											<p className="mt-1 text-sm text-slate-500">
-												{item.action}
-											</p>
-										</div>
-
-										<PriorityBadge
-											priority={item.priority}
-										/>
-									</div>
-								))}
-							</div>
-						</div>
-
-						<div className="rounded-3xl border border-red-100 bg-red-50 p-6">
-							<div className="flex gap-3">
-								<div className="grid h-11 w-11 place-items-center rounded-2xl bg-red-500 text-white">
-									<Siren size={20} />
-								</div>
-
-								<div>
-									<h4 className="font-bold text-slate-950">
-										Alert recommendation
-									</h4>
-									<p className="mt-1 text-sm leading-6 text-slate-600">
-										Prioritize new critical alerts first,
-										then acknowledge high severity alerts
-										assigned to active missions.
-									</p>
-								</div>
-							</div>
-						</div>
-
-						<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-							<div className="flex items-center justify-between">
-								<div>
-									<h3 className="text-xl font-bold text-slate-950">
-										New Alerts
-									</h3>
-									<p className="mt-1 text-sm text-slate-500">
-										Alerts waiting for review
-									</p>
-								</div>
-
-								<div className="grid h-12 w-12 place-items-center rounded-2xl bg-red-100 text-red-700">
-									<AlertTriangle size={22} />
-								</div>
-							</div>
-
-							<div className="mt-5">
-								<div className="mb-2 flex items-center justify-between text-sm">
-									<span className="font-semibold text-slate-700">
-										Queue pressure
-									</span>
-									<span className="font-bold text-red-600">
-										{newCount}/11
-									</span>
-								</div>
-
-								<div className="h-3 overflow-hidden rounded-full bg-slate-200">
-									<div
-										className="h-full rounded-full bg-red-500"
-										style={{
-											width: `${(newCount / 11) * 100}%`,
-										}}
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
+					<AlertSeverity alertSeverityData={alertSeverityData} />
 				</section>
 			</main>
 		</div>
