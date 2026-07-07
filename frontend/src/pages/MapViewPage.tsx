@@ -1,10 +1,7 @@
-import { useMemo, useState, type ElementType } from "react";
+import { useMemo, useState } from "react";
 import {
 	AlertTriangle,
 	CheckCircle2,
-	Drone,
-	LayoutDashboard,
-	Map,
 	MapPin,
 	Navigation,
 	Plane,
@@ -24,19 +21,11 @@ import {
 import L, { type LatLngExpression, type LatLngTuple } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Sidebar from "../components/layout/Sidebar";
+import StatCard from "../components/common/StatCard";
 
 type DroneStatus = "Active" | "Returning" | "Idle" | "Warning";
 type AlertSeverity = "Critical" | "High" | "Medium" | "Low";
 type ZoneType = "Wildfire" | "Agriculture" | "Inspection" | "Rescue";
-type StatColor = "teal" | "blue" | "red" | "orange";
-
-type StatCardProps = {
-	title: string;
-	value: string;
-	subtitle: string;
-	icon: ElementType;
-	color: StatColor;
-};
 
 type DroneMarker = {
 	id: number;
@@ -361,39 +350,6 @@ function getZoneStyle(type: ZoneType) {
 	};
 
 	return styles[type];
-}
-
-function StatCard({
-	title,
-	value,
-	subtitle,
-	icon: Icon,
-	color,
-}: StatCardProps) {
-	const colorClasses: Record<StatColor, string> = {
-		teal: "bg-teal-100 text-teal-700",
-		blue: "bg-blue-100 text-blue-700",
-		red: "bg-red-100 text-red-700",
-		orange: "bg-amber-100 text-amber-700",
-	};
-
-	return (
-		<div className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 transition hover:-translate-y-1 hover:shadow-lg">
-			<div
-				className={`grid h-12 w-12 place-items-center rounded-2xl ${colorClasses[color]}`}
-			>
-				<Icon size={23} />
-			</div>
-
-			<div>
-				<p className="text-sm font-medium text-slate-500">{title}</p>
-				<h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-					{value}
-				</h2>
-				<p className="mt-1 text-sm text-slate-400">{subtitle}</p>
-			</div>
-		</div>
-	);
 }
 
 function StatusBadge({ status }: StatusBadgeProps) {

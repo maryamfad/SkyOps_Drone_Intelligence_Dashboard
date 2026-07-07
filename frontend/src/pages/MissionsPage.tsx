@@ -14,12 +14,12 @@ import {
 	Target,
 } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import type { ElementType } from "react";
+
 import Sidebar from "../components/layout/Sidebar";
+import StatCard from "../components/common/StatCard";
 
 type MissionStatus = "Active" | "Scheduled" | "Review" | "Completed";
 type RiskLevel = "Critical" | "High" | "Medium" | "Low";
-type StatColor = "teal" | "blue" | "orange" | "green";
 
 type MissionItem = {
 	id: number;
@@ -44,14 +44,6 @@ type TimelineItem = {
 	time: string;
 	title: string;
 	status: "Active" | "Review" | "Scheduled";
-};
-
-type StatCardProps = {
-	title: string;
-	value: string;
-	subtitle: string;
-	icon: ElementType;
-	color: StatColor;
 };
 
 type RiskBadgeProps = {
@@ -183,39 +175,6 @@ const statusFilters: Array<"All" | MissionStatus> = [
 	"Review",
 	"Completed",
 ];
-
-function StatCard({
-	title,
-	value,
-	subtitle,
-	icon: Icon,
-	color,
-}: StatCardProps) {
-	const colorClasses: Record<StatColor, string> = {
-		teal: "bg-teal-100 text-teal-700",
-		blue: "bg-blue-100 text-blue-700",
-		orange: "bg-amber-100 text-amber-700",
-		green: "bg-emerald-100 text-emerald-700",
-	};
-
-	return (
-		<div className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 transition hover:-translate-y-1 hover:shadow-lg">
-			<div
-				className={`grid h-12 w-12 place-items-center rounded-2xl ${colorClasses[color]}`}
-			>
-				<Icon size={23} />
-			</div>
-
-			<div>
-				<p className="text-sm font-medium text-slate-500">{title}</p>
-				<h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-					{value}
-				</h2>
-				<p className="mt-1 text-sm text-slate-400">{subtitle}</p>
-			</div>
-		</div>
-	);
-}
 
 function RiskBadge({ risk }: RiskBadgeProps) {
 	const classes: Record<RiskLevel, string> = {

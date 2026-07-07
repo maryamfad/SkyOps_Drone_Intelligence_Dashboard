@@ -1,4 +1,4 @@
-import { useMemo, useState, type ElementType } from "react";
+import { useMemo, useState } from "react";
 import {
 	Activity,
 	BatteryCharging,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import Sidebar from "../components/layout/Sidebar";
+import StatCard from "../components/common/StatCard";
 
 type DroneStatus = "Available" | "In Mission" | "Maintenance" | "Offline";
 
@@ -26,14 +27,6 @@ type DroneItem = {
 	sensor: string;
 	mission: string;
 	lastActive: string;
-};
-
-type StatCardProps = {
-	title: string;
-	value: string;
-	subtitle: string;
-	icon: ElementType;
-	color: "teal" | "green" | "blue" | "orange";
 };
 
 const drones: DroneItem[] = [
@@ -137,45 +130,6 @@ const statusFilters: Array<"All" | DroneStatus> = [
 	"Maintenance",
 	"Offline",
 ];
-
-function getStatIconClass(color: StatCardProps["color"]) {
-	const classes = {
-		teal: "bg-teal-100 text-teal-700",
-		green: "bg-emerald-100 text-emerald-700",
-		blue: "bg-blue-100 text-blue-700",
-		orange: "bg-amber-100 text-amber-700",
-	};
-
-	return classes[color];
-}
-
-function StatCard({
-	title,
-	value,
-	subtitle,
-	icon: Icon,
-	color,
-}: StatCardProps) {
-	return (
-		<div className="flex items-start gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200">
-			<div
-				className={`grid h-12 w-12 place-items-center rounded-2xl ${getStatIconClass(
-					color,
-				)}`}
-			>
-				<Icon size={23} />
-			</div>
-
-			<div>
-				<p className="text-sm font-medium text-slate-500">{title}</p>
-				<h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-					{value}
-				</h2>
-				<p className="mt-1 text-sm text-slate-400">{subtitle}</p>
-			</div>
-		</div>
-	);
-}
 
 function StatusBadge({ status }: { status: DroneStatus }) {
 	const classes = {
