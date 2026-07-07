@@ -1,21 +1,18 @@
 import { useMemo, useState, type ElementType } from "react";
 import {
 	Activity,
-	AlertTriangle,
 	BatteryCharging,
 	Clock,
-	LayoutDashboard,
-	MapPin,
 	MoreHorizontal,
 	Plane,
 	Plus,
-	Radio,
 	Search,
 	ShieldCheck,
 	Wrench,
 	WifiOff,
 } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import Sidebar from "../components/layout/Sidebar";
 
 type DroneStatus = "Available" | "In Mission" | "Maintenance" | "Offline";
 
@@ -297,47 +294,7 @@ export default function DronesPage() {
 					</div>
 				</div>
 
-				<nav className="flex flex-col gap-2">
-					<a
-						href="#"
-						className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-					>
-						<LayoutDashboard size={18} />
-						Dashboard
-					</a>
-
-					<a
-						href="#"
-						className="flex items-center gap-3 rounded-2xl border-l-4 border-teal-400 bg-slate-800 px-4 py-3 text-white"
-					>
-						<Radio size={18} />
-						Drones
-					</a>
-
-					<a
-						href="#"
-						className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-					>
-						<MapPin size={18} />
-						Missions
-					</a>
-
-					<a
-						href="#"
-						className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-					>
-						<AlertTriangle size={18} />
-						Alerts
-					</a>
-
-					<a
-						href="#"
-						className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-					>
-						<MapPin size={18} />
-						Map View
-					</a>
-				</nav>
+				<Sidebar />
 
 				<div className="mt-auto flex items-center gap-3 rounded-3xl bg-slate-800 p-4">
 					<div className="grid h-10 w-10 place-items-center rounded-full bg-teal-500 font-bold">
