@@ -4,10 +4,7 @@ import {
 	AlertTriangle,
 	Calendar,
 	CheckCircle2,
-	Clock,
 	Flame,
-	MapPin,
-	MoreHorizontal,
 	Plane,
 	Plus,
 	Search,
@@ -17,6 +14,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import Sidebar from "../components/layout/Sidebar";
 import StatCard from "../components/common/StatCard";
+import MissionQueue from "../components/MissionQueue";
 
 type MissionStatus = "Active" | "Scheduled" | "Review" | "Completed";
 type RiskLevel = "Critical" | "High" | "Medium" | "Low";
@@ -44,18 +42,6 @@ type TimelineItem = {
 	time: string;
 	title: string;
 	status: "Active" | "Review" | "Scheduled";
-};
-
-type RiskBadgeProps = {
-	risk: RiskLevel;
-};
-
-type StatusBadgeProps = {
-	status: MissionStatus;
-};
-
-type ProgressBarProps = {
-	value: number;
 };
 
 type TimelineStatusBadgeProps = {
@@ -176,66 +162,6 @@ const statusFilters: Array<"All" | MissionStatus> = [
 	"Completed",
 ];
 
-function RiskBadge({ risk }: RiskBadgeProps) {
-	const classes: Record<RiskLevel, string> = {
-		Critical: "bg-red-100 text-red-700",
-		High: "bg-amber-100 text-amber-700",
-		Medium: "bg-blue-100 text-blue-700",
-		Low: "bg-emerald-100 text-emerald-700",
-	};
-
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${classes[risk]}`}
-		>
-			{risk}
-		</span>
-	);
-}
-
-function StatusBadge({ status }: StatusBadgeProps) {
-	const classes: Record<MissionStatus, string> = {
-		Active: "bg-emerald-100 text-emerald-700",
-		Scheduled: "bg-slate-100 text-slate-600",
-		Review: "bg-amber-100 text-amber-700",
-		Completed: "bg-sky-100 text-sky-700",
-	};
-
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${classes[status]}`}
-		>
-			{status}
-		</span>
-	);
-}
-
-function ProgressBar({ value }: ProgressBarProps) {
-	const barColor =
-		value >= 80
-			? "bg-teal-500"
-			: value > 0
-				? "bg-amber-500"
-				: "bg-slate-300";
-
-	return (
-		<div className="w-32">
-			<div className="mb-2 flex items-center justify-between">
-				<span className="text-xs font-semibold text-slate-600">
-					{value}%
-				</span>
-			</div>
-
-			<div className="h-2 overflow-hidden rounded-full bg-slate-200">
-				<div
-					className={`h-full rounded-full ${barColor}`}
-					style={{ width: `${value}%` }}
-				/>
-			</div>
-		</div>
-	);
-}
-
 function TimelineStatusBadge({ status }: TimelineStatusBadgeProps) {
 	const className =
 		status === "Active"
@@ -276,7 +202,6 @@ export default function MissionsPage() {
 			return matchesStatus && matchesSearch;
 		});
 	}, [searchTerm, selectedStatus]);
-
 	const activeCount = missions.filter(
 		(mission) => mission.status === "Active",
 	).length;
@@ -416,7 +341,8 @@ export default function MissionsPage() {
 				</section>
 
 				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.65fr_1fr]">
-					<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
+					<MissionQueue filteredMissions={filteredMissions} />
+					{/* <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
 						<div className="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-start">
 							<div>
 								<h3 className="text-xl font-bold text-slate-950">
@@ -540,7 +466,7 @@ export default function MissionsPage() {
 								</div>
 							)}
 						</div>
-					</div>
+					</div> */}
 
 					<div className="space-y-6">
 						<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
 	AlertTriangle,
 	BatteryCharging,
@@ -6,20 +7,14 @@ import {
 	Flame,
 	MapPin,
 	Plane,
+	Search,
 } from "lucide-react";
-// import {
-// 	Bar,
-// 	BarChart,
-// 	CartesianGrid,
-// 	ResponsiveContainer,
-// 	Tooltip,
-// 	XAxis,
-// 	YAxis,
-// } from "recharts";
+
 import Sidebar from "../components/layout/Sidebar";
 import StatCard from "../components/common/StatCard";
 import AlertSeverity from "../components/AlertSeverity";
 import MissionActivity from "../components/MissionActivity";
+import MissionQueue from "../components/MissionQueue";
 
 type MissionActivityData = {
 	day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
@@ -71,36 +66,36 @@ const alertSeverityData: AlertSeverityData[] = [
 	},
 ];
 
-const activeMissions = [
-	{
-		mission: "Wildfire Hotspot Scan",
-		type: "Wildfire",
-		drone: "SkyScout-01",
-		risk: "Critical",
-		status: "Active",
-	},
-	{
-		mission: "Crop Health Survey",
-		type: "Agriculture",
-		drone: "AgroFlyer-02",
-		risk: "Medium",
-		status: "Active",
-	},
-	{
-		mission: "Bridge Inspection",
-		type: "Inspection",
-		drone: "Inspecto-07",
-		risk: "High",
-		status: "Review",
-	},
-	{
-		mission: "Rescue Zone Mapping",
-		type: "Rescue",
-		drone: "RescueEye-03",
-		risk: "High",
-		status: "Active",
-	},
-];
+// const activeMissions = [
+// 	{
+// 		mission: "Wildfire Hotspot Scan",
+// 		type: "Wildfire",
+// 		drone: "SkyScout-01",
+// 		risk: "Critical",
+// 		status: "Active",
+// 	},
+// 	{
+// 		mission: "Crop Health Survey",
+// 		type: "Agriculture",
+// 		drone: "AgroFlyer-02",
+// 		risk: "Medium",
+// 		status: "Active",
+// 	},
+// 	{
+// 		mission: "Bridge Inspection",
+// 		type: "Inspection",
+// 		drone: "Inspecto-07",
+// 		risk: "High",
+// 		status: "Review",
+// 	},
+// 	{
+// 		mission: "Rescue Zone Mapping",
+// 		type: "Rescue",
+// 		drone: "RescueEye-03",
+// 		risk: "High",
+// 		status: "Active",
+// 	},
+// ];
 
 const sensorReadings = [
 	{ label: "Temperature", value: "68°C", status: "Critical" },
@@ -163,7 +158,128 @@ function SensorBadge({ status }: { status: string }) {
 	);
 }
 
+type MissionStatus = "Active" | "Scheduled" | "Review" | "Completed";
+type RiskLevel = "Critical" | "High" | "Medium" | "Low";
+
+type MissionItem = {
+	id: number;
+	title: string;
+	type: string;
+	location: string;
+	drone: string;
+	operator: string;
+	risk: RiskLevel;
+	status: MissionStatus;
+	progress: number;
+	startTime: string;
+};
+
+const missions: MissionItem[] = [
+	{
+		id: 1,
+		title: "Wildfire Hotspot Scan",
+		type: "Wildfire",
+		location: "Kelowna, BC",
+		drone: "SkyScout-01",
+		operator: "M. Fadaee",
+		risk: "Critical",
+		status: "Active",
+		progress: 82,
+		startTime: "09:30 AM",
+	},
+	{
+		id: 2,
+		title: "Crop Health Survey",
+		type: "Agriculture",
+		location: "Guelph, ON",
+		drone: "AgroFlyer-02",
+		operator: "A. Carter",
+		risk: "Medium",
+		status: "Active",
+		progress: 58,
+		startTime: "10:15 AM",
+	},
+	{
+		id: 3,
+		title: "Bridge Inspection",
+		type: "Inspection",
+		location: "Waterloo, ON",
+		drone: "Inspecto-07",
+		operator: "S. Patel",
+		risk: "High",
+		status: "Review",
+		progress: 76,
+		startTime: "08:45 AM",
+	},
+	{
+		id: 4,
+		title: "Rescue Zone Mapping",
+		type: "Rescue",
+		location: "North Vancouver, BC",
+		drone: "RescueEye-03",
+		operator: "L. Morgan",
+		risk: "High",
+		status: "Active",
+		progress: 41,
+		startTime: "11:00 AM",
+	},
+	{
+		id: 5,
+		title: "Wildlife Corridor Count",
+		type: "Wildlife",
+		location: "Banff, AB",
+		drone: "WildTrack-05",
+		operator: "N. Rivera",
+		risk: "Low",
+		status: "Completed",
+		progress: 100,
+		startTime: "07:30 AM",
+	},
+	{
+		id: 6,
+		title: "Solar Farm Thermal Pass",
+		type: "Inspection",
+		location: "London, ON",
+		drone: "ThermoEye-11",
+		operator: "D. Kim",
+		risk: "Medium",
+		status: "Scheduled",
+		progress: 0,
+		startTime: "03:30 PM",
+	},
+];
+
+const statusFilters: Array<"All" | MissionStatus> = [
+	"All",
+	"Active",
+	"Scheduled",
+	"Review",
+	"Completed",
+];
+
 export default function DashboardPage() {
+	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [selectedStatus, setSelectedStatus] = useState<"All" | MissionStatus>(
+		"All",
+	);
+
+	const filteredMissions = useMemo<MissionItem[]>(() => {
+		return missions.filter((mission) => {
+			const matchesStatus =
+				selectedStatus === "All" || mission.status === selectedStatus;
+
+			const searchValue = searchTerm.toLowerCase();
+
+			const matchesSearch =
+				mission.title.toLowerCase().includes(searchValue) ||
+				mission.type.toLowerCase().includes(searchValue) ||
+				mission.location.toLowerCase().includes(searchValue) ||
+				mission.drone.toLowerCase().includes(searchValue) ||
+				mission.operator.toLowerCase().includes(searchValue);
+
+			return matchesStatus && matchesSearch;
+		});
+	}, [searchTerm, selectedStatus]);
 	return (
 		<div className="min-h-screen bg-slate-100 text-slate-950">
 			<aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col bg-slate-950 px-5 py-7 text-white lg:flex">
@@ -258,101 +374,43 @@ export default function DashboardPage() {
 					<AlertSeverity alertSeverityData={alertSeverityData} />
 				</section>
 
-				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
-					<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-						<div className="mb-5">
-							<h3 className="text-xl font-bold text-slate-950">
-								Active Missions
-							</h3>
-							<p className="mt-1 text-sm text-slate-500">
-								Live mission queue and assigned drones
-							</p>
+				<section className="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/70">
+					<div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+						<div className="relative w-full xl:max-w-xl">
+							<Search
+								size={18}
+								className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+							/>
+
+							<input
+								value={searchTerm}
+								onChange={(event) =>
+									setSearchTerm(event.target.value)
+								}
+								placeholder="Search by mission, location, drone, or operator..."
+								className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-400 focus:bg-white focus:ring-4 focus:ring-teal-100"
+							/>
 						</div>
 
-						<div className="overflow-x-auto">
-							<table className="w-full min-w-[680px] border-collapse">
-								<thead>
-									<tr className="bg-slate-50 text-left text-sm text-slate-500">
-										<th className="rounded-l-2xl px-4 py-4 font-semibold">
-											Mission
-										</th>
-										<th className="px-4 py-4 font-semibold">
-											Type
-										</th>
-										<th className="px-4 py-4 font-semibold">
-											Drone
-										</th>
-										<th className="px-4 py-4 font-semibold">
-											Risk
-										</th>
-										<th className="rounded-r-2xl px-4 py-4 font-semibold">
-											Status
-										</th>
-									</tr>
-								</thead>
-
-								<tbody>
-									{activeMissions.map((mission) => (
-										<tr
-											key={mission.mission}
-											className="border-b border-slate-100 last:border-b-0"
-										>
-											<td className="px-4 py-4 font-semibold text-slate-950">
-												{mission.mission}
-											</td>
-											<td className="px-4 py-4 text-sm text-slate-600">
-												{mission.type}
-											</td>
-											<td className="px-4 py-4 text-sm text-slate-600">
-												{mission.drone}
-											</td>
-											<td className="px-4 py-4">
-												<RiskBadge
-													risk={mission.risk}
-												/>
-											</td>
-											<td className="px-4 py-4">
-												<StatusBadge
-													status={mission.status}
-												/>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-					<div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
-						<div className="mb-5">
-							<h3 className="text-xl font-bold text-slate-950">
-								Latest Sensor Readings
-							</h3>
-							<p className="mt-1 text-sm text-slate-500">
-								Simulated telemetry stream
-							</p>
-						</div>
-
-						<div className="flex flex-col gap-3">
-							{sensorReadings.map((reading) => (
-								<div
-									key={reading.label}
-									className="flex items-center justify-between rounded-2xl border border-slate-100 p-4"
+						<div className="flex flex-wrap gap-2">
+							{statusFilters.map((status) => (
+								<button
+									key={status}
+									onClick={() => setSelectedStatus(status)}
+									className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+										selectedStatus === status
+											? "border-teal-500 bg-teal-500 text-white"
+											: "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+									}`}
 								>
-									<div>
-										<p className="text-sm text-slate-500">
-											{reading.label}
-										</p>
-										<strong className="mt-1 block text-lg text-slate-950">
-											{reading.value}
-										</strong>
-									</div>
-
-									<SensorBadge status={reading.status} />
-								</div>
+									{status}
+								</button>
 							))}
 						</div>
 					</div>
+				</section>
+				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
+					<MissionQueue filteredMissions={filteredMissions} />
 				</section>
 			</main>
 		</div>
