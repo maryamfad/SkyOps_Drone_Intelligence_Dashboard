@@ -50,11 +50,11 @@ type AlertSeverityData = {
 	dotClass: string;
 };
 
-type ResponseQueueItem = {
-	drone: string;
-	action: string;
-	priority: AlertSeverity;
-};
+// type ResponseQueueItem = {
+// 	drone: string;
+// 	action: string;
+// 	priority: AlertSeverity;
+// };
 
 type SeverityBadgeProps = {
 	severity: AlertSeverity;
@@ -64,9 +64,9 @@ type StatusBadgeProps = {
 	status: AlertStatus;
 };
 
-type PriorityBadgeProps = {
-	priority: AlertSeverity;
-};
+// type PriorityBadgeProps = {
+// 	priority: AlertSeverity;
+// };
 
 const alerts: AlertItem[] = [
 	{
@@ -170,23 +170,23 @@ const alertSeverityData: AlertSeverityData[] = [
 		dotClass: "bg-teal-500",
 	},
 ];
-const responseQueue: ResponseQueueItem[] = [
-	{
-		drone: "SkyScout-01",
-		action: "Review thermal spike and smoke readings",
-		priority: "Critical",
-	},
-	{
-		drone: "RescueEye-03",
-		action: "Return drone to base for battery swap",
-		priority: "High",
-	},
-	{
-		drone: "Inspecto-07",
-		action: "Check connection and signal module",
-		priority: "Medium",
-	},
-];
+// const responseQueue: ResponseQueueItem[] = [
+// 	{
+// 		drone: "SkyScout-01",
+// 		action: "Review thermal spike and smoke readings",
+// 		priority: "Critical",
+// 	},
+// 	{
+// 		drone: "RescueEye-03",
+// 		action: "Return drone to base for battery swap",
+// 		priority: "High",
+// 	},
+// 	{
+// 		drone: "Inspecto-07",
+// 		action: "Check connection and signal module",
+// 		priority: "Medium",
+// 	},
+// ];
 
 const severityFilters: Array<"All" | AlertSeverity> = [
 	"All",
@@ -236,22 +236,22 @@ function StatusBadge({ status }: StatusBadgeProps) {
 	);
 }
 
-function PriorityBadge({ priority }: PriorityBadgeProps) {
-	const classes: Record<AlertSeverity, string> = {
-		Critical: "bg-red-100 text-red-700",
-		High: "bg-amber-100 text-amber-700",
-		Medium: "bg-blue-100 text-blue-700",
-		Low: "bg-emerald-100 text-emerald-700",
-	};
+// function PriorityBadge({ priority }: PriorityBadgeProps) {
+// 	const classes: Record<AlertSeverity, string> = {
+// 		Critical: "bg-red-100 text-red-700",
+// 		High: "bg-amber-100 text-amber-700",
+// 		Medium: "bg-blue-100 text-blue-700",
+// 		Low: "bg-emerald-100 text-emerald-700",
+// 	};
 
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${classes[priority]}`}
-		>
-			{priority}
-		</span>
-	);
-}
+// 	return (
+// 		<span
+// 			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${classes[priority]}`}
+// 		>
+// 			{priority}
+// 		</span>
+// 	);
+// }
 
 function getCategoryIcon(category: AlertCategory) {
 	const icons: Record<AlertCategory, ElementType> = {
@@ -302,7 +302,7 @@ export default function AlertsPage() {
 		(alert) => alert.severity === "Critical",
 	).length;
 
-	const newCount = alerts.filter((alert) => alert.status === "New").length;
+	// const newCount = alerts.filter((alert) => alert.status === "New").length;
 
 	const resolvedCount = alerts.filter(
 		(alert) => alert.status === "Resolved",

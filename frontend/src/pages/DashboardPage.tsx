@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import {
-	AlertTriangle,
 	BatteryCharging,
-	CheckCircle2,
 	Drone,
 	Flame,
 	MapPin,
@@ -15,6 +13,7 @@ import StatCard from "../components/common/StatCard";
 import AlertSeverity from "../components/AlertSeverity";
 import MissionActivity from "../components/MissionActivity";
 import MissionQueue from "../components/MissionQueue";
+import LatestSensorReading from "../components/LatestSensorReading";
 
 type MissionActivityData = {
 	day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
@@ -65,98 +64,6 @@ const alertSeverityData: AlertSeverityData[] = [
 		dotClass: "bg-teal-500",
 	},
 ];
-
-// const activeMissions = [
-// 	{
-// 		mission: "Wildfire Hotspot Scan",
-// 		type: "Wildfire",
-// 		drone: "SkyScout-01",
-// 		risk: "Critical",
-// 		status: "Active",
-// 	},
-// 	{
-// 		mission: "Crop Health Survey",
-// 		type: "Agriculture",
-// 		drone: "AgroFlyer-02",
-// 		risk: "Medium",
-// 		status: "Active",
-// 	},
-// 	{
-// 		mission: "Bridge Inspection",
-// 		type: "Inspection",
-// 		drone: "Inspecto-07",
-// 		risk: "High",
-// 		status: "Review",
-// 	},
-// 	{
-// 		mission: "Rescue Zone Mapping",
-// 		type: "Rescue",
-// 		drone: "RescueEye-03",
-// 		risk: "High",
-// 		status: "Active",
-// 	},
-// ];
-
-const sensorReadings = [
-	{ label: "Temperature", value: "68°C", status: "Critical" },
-	{ label: "Smoke Level", value: "High", status: "Critical" },
-	{ label: "Altitude", value: "120 m", status: "Normal" },
-	{ label: "Speed", value: "38 km/h", status: "Normal" },
-	{ label: "Thermal Anomaly", value: "91%", status: "Critical" },
-];
-
-function RiskBadge({ risk }: { risk: string }) {
-	const className =
-		risk === "Critical"
-			? "bg-red-100 text-red-700"
-			: risk === "High"
-				? "bg-amber-100 text-amber-700"
-				: "bg-blue-100 text-blue-700";
-
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${className}`}
-		>
-			{risk}
-		</span>
-	);
-}
-
-function StatusBadge({ status }: { status: string }) {
-	const className =
-		status === "Active"
-			? "bg-emerald-100 text-emerald-700"
-			: "bg-amber-100 text-amber-700";
-
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${className}`}
-		>
-			{status}
-		</span>
-	);
-}
-
-function SensorBadge({ status }: { status: string }) {
-	const isCritical = status === "Critical";
-
-	return (
-		<span
-			className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
-				isCritical
-					? "bg-red-100 text-red-700"
-					: "bg-emerald-100 text-emerald-700"
-			}`}
-		>
-			{isCritical ? (
-				<AlertTriangle size={13} />
-			) : (
-				<CheckCircle2 size={13} />
-			)}
-			{status}
-		</span>
-	);
-}
 
 type MissionStatus = "Active" | "Scheduled" | "Review" | "Completed";
 type RiskLevel = "Critical" | "High" | "Medium" | "Low";
@@ -299,19 +206,6 @@ export default function DashboardPage() {
 				</div>
 
 				<Sidebar />
-
-				<div className="mt-auto flex items-center gap-3 rounded-3xl bg-slate-800 p-4">
-					<div className="grid h-10 w-10 place-items-center rounded-full bg-teal-500 font-bold">
-						M
-					</div>
-
-					<div>
-						<h4 className="text-sm font-semibold">Maryam Fadaee</h4>
-						<p className="mt-1 text-xs text-slate-400">
-							Full Stack Developer
-						</p>
-					</div>
-				</div>
 			</aside>
 
 			<main className="min-h-screen p-6 lg:ml-64 lg:p-10">
@@ -411,6 +305,8 @@ export default function DashboardPage() {
 				</section>
 				<section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
 					<MissionQueue filteredMissions={filteredMissions} />
+
+					<LatestSensorReading />
 				</section>
 			</main>
 		</div>

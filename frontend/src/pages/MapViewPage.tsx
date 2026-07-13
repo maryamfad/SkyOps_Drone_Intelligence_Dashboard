@@ -69,10 +69,6 @@ type RouteItem = {
 	colorClass: string;
 };
 
-type StatusBadgeProps = {
-	status: DroneStatus | MissionZone["status"];
-};
-
 type SeverityBadgeProps = {
 	severity: AlertSeverity;
 };
@@ -350,25 +346,6 @@ function getZoneStyle(type: ZoneType) {
 	};
 
 	return styles[type];
-}
-
-function StatusBadge({ status }: StatusBadgeProps) {
-	const classes: Record<string, string> = {
-		Active: "bg-emerald-100 text-emerald-700",
-		Returning: "bg-amber-100 text-amber-700",
-		Idle: "bg-slate-100 text-slate-600",
-		Warning: "bg-red-100 text-red-700",
-		Monitoring: "bg-blue-100 text-blue-700",
-		Review: "bg-amber-100 text-amber-700",
-	};
-
-	return (
-		<span
-			className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${classes[status]}`}
-		>
-			{status}
-		</span>
-	);
 }
 
 function SeverityBadge({ severity }: SeverityBadgeProps) {
